@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+// import { toast } from "react-toastify";
 const schema = yup.object().shape({
   firstName: yup.string().required("First name is required"),
   lastName: yup.string().required("Last name is required"),
@@ -12,7 +13,8 @@ export const SignUpForm = () => {
  const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: yupResolver(schema),
   });
-  const onSubmit = (data) =>{ 
+  
+  const onSubmit = (data) =>{     
     console.log(data)
     reset();
 }

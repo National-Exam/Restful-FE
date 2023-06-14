@@ -1,7 +1,11 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
+import { clearState, signupSelector, signupUser } from "../store/SignUpSlice";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 // import { toast } from "react-toastify";
 const schema = yup.object().shape({
   firstName: yup.string().required("First name is required"),
@@ -13,11 +17,29 @@ export const SignUpForm = () => {
  const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: yupResolver(schema),
   });
+      const dispatch = useDispatch();
+    const navigate = useNavigate();    
+    const { isFetching, isSuccess, isError, errorMessage } = useSelector(
+        signupSelector
+    ); 
   
-  const onSubmit = (data) =>{     
-    console.log(data)
+  const onSubmit = (data) =>{         
+     dispatch(signupUser(data));
     reset();
 }
+ useEffect(() => {  
+        if (isError) {  
+          console.log(errorMessage, 'the error msg')          
+            toast.error(errorMessage);
+            dispatch(clearState());
+        }
+
+        if (isSuccess) {
+            dispatch(clearState());
+            console.log("success")
+            navigate('/');
+        }
+    }, [dispatch, errorMessage, isError, isSuccess, navigate]);
   return (
     <section className="bg-gray-50">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -103,8 +125,10 @@ export const SignUpForm = () => {
               <button
                 type="submit"
                 className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-              >
-                Register
+              >                
+                {
+                  isFetching ? <span className="ml-3">Saving...</span> : 'Register'
+                }
               </button>
               <p className="text-sm font-light text-gray-500">
                 Already have an account? <Link to="/" className="font-medium text-primary-600 hover:underline">Sign in</Link>

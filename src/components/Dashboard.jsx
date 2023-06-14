@@ -1,3 +1,4 @@
+import Table from "./Table"
 
 
 const DashboardComponent = () => {
@@ -16,8 +17,8 @@ const DashboardComponent = () => {
             <p className="text-2xl text-gray-400">+</p>
          </div>
       </div>
-      <div className="flex items-center justify-center h-72 mb-4 rounded bg-gray-100">
-         <p className="text-2xl text-gray-400">+</p>
+      <div className="flex items-center p-2 justify-center h-72 mb-4 rounded bg-gray-100">
+         <Table />
       </div>
      
       <div className="flex items-center justify-center h-64 mb-4 rounded bg-gray-100">

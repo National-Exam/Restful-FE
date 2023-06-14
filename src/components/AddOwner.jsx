@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { clearState, createUser, userSelector } from "../store/UserSlice";
+import { clearState, createUser, getUsers, userSelector } from "../store/UserSlice";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
@@ -28,13 +28,13 @@ const AddOwner = () => {
     reset();
 }
  useEffect(() => {  
-        if (createdError) {  
-          console.log(createdErrorMessage, 'the error msg')          
+        if (createdError) {                 
             toast.error(createdErrorMessage);
             dispatch(clearState());
         }
 
         if (createdSuccess) {
+            dispatch(getUsers());
             dispatch(clearState());            
             toast.success("User created successfully")          
         }

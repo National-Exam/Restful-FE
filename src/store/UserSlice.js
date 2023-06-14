@@ -12,6 +12,7 @@ export const getUsers = createAsyncThunk(
       const response = await axios.get(link,{
         headers,
       });
+      console.log(response, 'the BE RESPONSE')
       let data = await response.data;
       if (response.status === 200) {        
         return data;
@@ -81,7 +82,7 @@ export const UserSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getUsers.fulfilled, (state, { payload }) => {
-        state.users = payload?.users;
+        state.users = payload;
         state.isFetching = false;
         state.isSuccess = true;
         return state;

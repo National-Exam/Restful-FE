@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import AddOwner from "./AddOwner";
+import { useDispatch, useSelector } from "react-redux";
+import { getUsers, userSelector } from "../store/UserSlice";
 const TableHeader = () => {
     const fields = ["Full name","National Id","Phone","Address"];
     return (
@@ -23,8 +25,26 @@ const Table = () => {
     const [showAddVehicle,setShowAddVehicle] = useState(false);
     const handleShowAddVehicle = () => {
         setShowAddVehicle(!showAddVehicle);
-    }   
-     
+    } 
+    const dispatch = useDispatch();
+    const [owners,setOwners] = useState([])
+      const { isFetching, createdSuccess, users } = useSelector(
+        userSelector
+    );
+    useEffect(() => {
+        if (users && users.length > 0 && !isFetching) {            
+            setOwners(users);
+        }
+    },[users,isFetching])    
+    useEffect(() => {
+        if(createdSuccess)
+         handleShowAddVehicle()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[createdSuccess])
+    useEffect(() => {
+        dispatch(getUsers());
+    },[dispatch])
+    
   return (
     <div className="relative w-full p-3 overflow-x-auto sm:rounded-lg">
       <div className="pb-4 flex justify-between items-center">
@@ -70,63 +90,32 @@ const Table = () => {
       <table className="w-full text-sm text-left text-gray-500">
        <TableHeader />
         <tbody>
-          <tr className="bg-white border-b">
+            {
+                owners?.map(owner=>{
+                    return (
+<tr key={owner._id} className="bg-white border-b">
             <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
             >
-              Apple MacBook Pro 17
+              {`${owner.firstName} ${owner.lastName}`}
             </th>
-            <td className="px-6 py-4">Silver</td>
-            <td className="px-6 py-4">Laptop</td>
-            <td className="px-6 py-4">$2999</td>
-            <td className="px-6 py-4">
+            <td className="px-6 py-4">{owner.nationalId}</td>
+            <td className="px-6 py-4">{owner.phone ?? '--'}</td>
+            <td className="px-6 py-4">{owner.address}</td>
+            {/* <td className="px-6 py-4">
               <a
                 href="#"
                 className="font-medium text-blue-600 hover:underline"
               >
                 Edit
               </a>
-            </td>
-          </tr>
-          <tr className="bg-white border-b">
-            <th
-              scope="row"
-              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-            >
-              Microsoft Surface Pro
-            </th>
-            <td className="px-6 py-4">White</td>
-            <td className="px-6 py-4">Laptop PC</td>
-            <td className="px-6 py-4">$1999</td>
-            <td className="px-6 py-4">
-              <a
-                href="#"
-                className="font-medium text-blue-600 hover:underline"
-              >
-                Edit
-              </a>
-            </td>
-          </tr>
-          <tr className="bg-white">
-            <th
-              scope="row"
-              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-            >
-              Magic Mouse 2
-            </th>
-            <td className="px-6 py-4">Black</td>
-            <td className="px-6 py-4">Accessories</td>
-            <td className="px-6 py-4">$99</td>
-            <td className="px-6 py-4">
-              <a
-                href="#"
-                className="font-medium text-blue-600 hover:underline"
-              >
-                Edit
-              </a>
-            </td>
-          </tr>
+            </td> */}
+          </tr> 
+                    )
+                })
+            }
+                 
         </tbody>
       </table>
       <nav className="mt-6" aria-label="Page navigation">

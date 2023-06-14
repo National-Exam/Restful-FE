@@ -17,7 +17,7 @@ const DashboardComponent = () => {
             <p className="text-2xl text-gray-400">+</p>
          </div>
       </div>
-      <div className="flex items-center p-2 justify-center h-72 mb-4 rounded bg-gray-100">
+      <div className="flex items-center p-2 justify-center h-76 mb-4 rounded bg-gray-100">
          <Table />
       </div>
      

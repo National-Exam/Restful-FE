@@ -1,6 +1,32 @@
+import { useState } from "react";
+import Modal from "./Modal";
+import AddOwner from "./AddOwner";
+const TableHeader = () => {
+    const fields = ["Full name","National Id","Phone","Address"];
+    return (
+ <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+          <tr>
+            {
+                fields.map(field=>(
+<th scope="col" key={field} className="px-6 py-3">
+              {field}
+            </th>
+                ))
+            }
+            
+            
+          </tr>
+        </thead>
+    )
+}
 const Table = () => {
+    const [showAddVehicle,setShowAddVehicle] = useState(false);
+    const handleShowAddVehicle = () => {
+        setShowAddVehicle(!showAddVehicle);
+    }   
+     
   return (
-    <div className="relative w-full p-3 overflow-x-auto shadow-md sm:rounded-lg">
+    <div className="relative w-full p-3 overflow-x-auto sm:rounded-lg">
       <div className="pb-4 flex justify-between items-center">
         <div>
 
@@ -15,41 +41,34 @@ const Table = () => {
       type="text"
       id="table-search"
       className="block p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-0"
-      placeholder="Search for items"
+      placeholder="Search users"
     />
   </div>
         </div>
         <div>
-            <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-1 text-center inline-flex items-center mr-2">
+            <button onClick={()=>handleShowAddVehicle()} type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-1 text-center inline-flex items-center mr-2">
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
 </svg>
-  Add Vehicle
+  Add user
 </button>
+{
+    showAddVehicle && (
+<div id="authentication-modal" tabIndex="-1" aria-hidden="true" className="fixed flex justify-center items-center z-50  w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div className="fixed inset-0 bg-black bg-opacity-50"></div>
+    <Modal handleShowAddVehicle={handleShowAddVehicle} >
+        <AddOwner />
+    </Modal>
+</div>
+    )
+}
+
 
         </div>
 </div>
 
       <table className="w-full text-sm text-left text-gray-500">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              Product name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Color
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Category
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Price
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Action
-            </th>
-          </tr>
-        </thead>
+       <TableHeader />
         <tbody>
           <tr className="bg-white border-b">
             <th
@@ -110,6 +129,32 @@ const Table = () => {
           </tr>
         </tbody>
       </table>
+      <nav className="mt-6" aria-label="Page navigation">
+  <ul className="inline-flex -space-x-px">
+    <li>
+      <a href="#" className="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700">Previous</a>
+    </li>
+    <li>
+      <a href="#" className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">1</a>
+    </li>
+    <li>
+      <a href="#" className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">2</a>
+    </li>
+    <li>
+      <a href="#" aria-current="page" className="px-3 py-2 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700">3</a>
+    </li>
+    <li>
+      <a href="#" className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">4</a>
+    </li>
+    <li>
+      <a href="#" className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">5</a>
+    </li>
+    <li>
+      <a href="#" className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700">Next</a>
+    </li>
+  </ul>
+</nav>
+
     </div>
   );
 }

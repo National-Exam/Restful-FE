@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
-import { clearState, createUser, getUsers, userSelector } from "../store/UserSlice";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { clearState, createVehicle, getVehicles, vehicleSelector } from "../store/VehicleSlice";
 const schema = yup.object().shape({
   chasisNumber: yup.string().required("Chasis number is required"),
   mfgCompany: yup.string().required("Manufacture company is required"),
@@ -22,11 +22,11 @@ const AddVehicle = () => {
       const dispatch = useDispatch();
     const navigate = useNavigate();    
     const { isCreating, createdSuccess, createdError, createdErrorMessage } = useSelector(
-        userSelector
+        vehicleSelector
     ); 
   
   const onSubmit = (data) =>{         
-     dispatch(createUser(data));
+     dispatch(createVehicle(data));
     reset();
 }
  useEffect(() => {  
@@ -36,9 +36,9 @@ const AddVehicle = () => {
         }
 
         if (createdSuccess) {
-            dispatch(getUsers());
+            dispatch(getVehicles());
             dispatch(clearState());            
-            toast.success("User created successfully")          
+            toast.success("Vehicle created successfully")          
         }
     }, [dispatch, createdErrorMessage, createdError, createdSuccess, navigate]);
   return (

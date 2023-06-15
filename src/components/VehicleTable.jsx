@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import Modal from "./Modal";
-import AddOwner from "./AddOwner";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsers } from "../store/UserSlice";
 import TableHeader from "./TableHeader";
-import { vehicleSelector } from "../store/VehicleSlice";
+import { getVehicles, vehicleSelector } from "../store/VehicleSlice";
+import AddVehicle from "./AddVehicle";
 
 const VehicleTable = () => {
     const [showAdd,setShowAdd] = useState(false);
@@ -28,7 +27,7 @@ const VehicleTable = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[createdSuccess])
     useEffect(() => {
-        dispatch(getUsers());
+        dispatch(getVehicles());
     },[dispatch])
     
   return (
@@ -62,8 +61,8 @@ const VehicleTable = () => {
     showAdd && (
 <div id="authentication-modal" tabIndex="-1" aria-hidden="true" className="fixed flex justify-center items-center z-50  w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div className="fixed inset-0 bg-black bg-opacity-50"></div>
-    <Modal handleShowAdd={handleShowAdd} >
-        <AddOwner />
+    <Modal handleShow={handleShowAdd} >
+        <AddVehicle />
     </Modal>
 </div>
     )

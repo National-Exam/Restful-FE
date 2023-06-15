@@ -25,16 +25,18 @@ export const getVehicles = createAsyncThunk("users/getVehicles", async (thunkAPI
 
 export const createVehicle = createAsyncThunk(
   "users/createVehicle",
-  async ({ firstName, lastName, phone, nationalId, address }, thunkAPI) => {
+  async ({ chasisNumber, mfgCompany, mfgYear, owner, model,plateNumber,price }, thunkAPI) => {
     try {
       const headers = createAuthorizationHeaders();
       let link = "http://localhost:5000/api/v1/vehicles";
       const params = {
-        phone,
-        firstName,
-        lastName,
-        nationalId,
-        address,
+        mfgYear,
+        chasisNumber,
+        mfgCompany,
+        owner,
+        model,
+        plateNumber,
+        price
       };
       const response = await axios.post(link, params, {
         headers,
@@ -79,7 +81,7 @@ export const vehicleSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getVehicles.fulfilled, (state, { payload }) => {
-        state.users = payload;
+        state.vehicles = payload;
         state.isFetching = false;
         state.isSuccess = true;
         return state;

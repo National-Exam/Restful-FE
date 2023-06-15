@@ -1,9 +1,9 @@
 import { useState } from "react";
-import DashboardComponent from "../components/Dashboard"
 import Navbar from "../components/Navbar"
 import Sidebar from "../components/Sidebar"
+import UserComponent from "../components/UserComponent";
 
-const Dashboard = () => {
+const UserPage = () => {
   const [sidebarOpen,setSidebarOpen] = useState(false);
   const handleOpenSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -12,9 +12,9 @@ const Dashboard = () => {
     <>
      <Navbar handleOpenSidebar={handleOpenSidebar} />
      <Sidebar sidebarOpen={sidebarOpen} handleOpenSidebar={handleOpenSidebar} />
-     <DashboardComponent />
+     <UserComponent />
     </>
   )
 }
 
-export default Dashboard
+export default UserPage

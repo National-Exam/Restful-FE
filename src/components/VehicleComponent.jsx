@@ -1,5 +1,6 @@
-import UserTable from "./UserTable"
-const DashboardComponent = () => {
+import VehicleTable from "./VehicleTable"
+
+const VehicleComponent = () => {
   return (
     <>    
 <div className="p-4 sm:ml-64">
@@ -16,7 +17,7 @@ const DashboardComponent = () => {
          </div>
       </div>
       <div className="flex items-center p-2 justify-center h-76 mb-4 rounded bg-gray-100">
-         <UserTable />
+         <VehicleTable />
       </div>
      
       <div className="flex items-center justify-center h-64 mb-4 rounded bg-gray-100">
@@ -30,4 +31,4 @@ const DashboardComponent = () => {
   )
 }
 
-export default DashboardComponent
+export default VehicleComponent

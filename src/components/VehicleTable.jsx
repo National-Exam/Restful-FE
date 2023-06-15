@@ -2,43 +2,29 @@ import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import AddOwner from "./AddOwner";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsers, userSelector } from "../store/UserSlice";
-const TableHeader = () => {
-    const fields = ["Full name","National Id","Phone","Address"];
-    return (
- <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            {
-                fields.map(field=>(
-<th scope="col" key={field} className="px-6 py-3">
-              {field}
-            </th>
-                ))
-            }
-            
-            
-          </tr>
-        </thead>
-    )
-}
-const Table = () => {
-    const [showAddVehicle,setShowAddVehicle] = useState(false);
-    const handleShowAddVehicle = () => {
-        setShowAddVehicle(!showAddVehicle);
+import { getUsers } from "../store/UserSlice";
+import TableHeader from "./TableHeader";
+import { vehicleSelector } from "../store/VehicleSlice";
+
+const VehicleTable = () => {
+    const [showAdd,setShowAdd] = useState(false);
+    const handleShowAdd = () => {
+        setShowAdd(!showAdd);
     } 
+    const fields = ["Chasis number","Manufacture company","Manufacture year","Price","Vehicle plate number", "Model"];
     const dispatch = useDispatch();
-    const [owners,setOwners] = useState([])
-      const { isFetching, createdSuccess, users } = useSelector(
-        userSelector
+    const [vehiclesData,setVehicles] = useState([])
+      const { isFetching, createdSuccess, vehicles } = useSelector(
+        vehicleSelector
     );
     useEffect(() => {
-        if (users && users.length > 0 && !isFetching) {            
-            setOwners(users);
+        if (vehicles && vehicles.length > 0 && !isFetching) {            
+            setVehicles(vehicles);
         }
-    },[users,isFetching])    
+    },[vehicles,isFetching])    
     useEffect(() => {
         if(createdSuccess)
-         handleShowAddVehicle()
+         handleShowAdd()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[createdSuccess])
     useEffect(() => {
@@ -61,22 +47,22 @@ const Table = () => {
       type="text"
       id="table-search"
       className="block p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-0"
-      placeholder="Search users"
+      placeholder="Search vehicles"
     />
   </div>
         </div>
         <div>
-            <button onClick={()=>handleShowAddVehicle()} type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-1 text-center inline-flex items-center mr-2">
+            <button onClick={()=>handleShowAdd()} type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-1 text-center inline-flex items-center mr-2">
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
 </svg>
-  Add user
+  Add vehicle
 </button>
 {
-    showAddVehicle && (
+    showAdd && (
 <div id="authentication-modal" tabIndex="-1" aria-hidden="true" className="fixed flex justify-center items-center z-50  w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div className="fixed inset-0 bg-black bg-opacity-50"></div>
-    <Modal handleShowAddVehicle={handleShowAddVehicle} >
+    <Modal handleShowAdd={handleShowAdd} >
         <AddOwner />
     </Modal>
 </div>
@@ -88,29 +74,23 @@ const Table = () => {
 </div>
 
       <table className="w-full text-sm text-left text-gray-500">
-       <TableHeader />
+       <TableHeader fields={fields} />
         <tbody>
             {
-                owners?.map(owner=>{
+                vehiclesData?.map(vehicle=>{
                     return (
-<tr key={owner._id} className="bg-white border-b">
+<tr key={vehicle._id} className="bg-white border-b">
             <th
               scope="row"
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
             >
-              {`${owner.firstName} ${owner.lastName}`}
+              {vehicle.chasisNumber}
             </th>
-            <td className="px-6 py-4">{owner.nationalId}</td>
-            <td className="px-6 py-4">{owner.phone ?? '--'}</td>
-            <td className="px-6 py-4">{owner.address}</td>
-            {/* <td className="px-6 py-4">
-              <a
-                href="#"
-                className="font-medium text-blue-600 hover:underline"
-              >
-                Edit
-              </a>
-            </td> */}
+            <td className="px-6 py-4">{vehicle.mfgCompany}</td>
+            <td className="px-6 py-4">{vehicle.mfgYear ?? '--'}</td>
+            <td className="px-6 py-4">{vehicle.price}</td>
+            <td className="px-6 py-4">{vehicle.plateNumber}</td>
+            <td className="px-6 py-4">{vehicle.model}</td>           
           </tr> 
                     )
                 })
@@ -148,4 +128,4 @@ const Table = () => {
   );
 }
 
-export default Table;
+export default VehicleTable;

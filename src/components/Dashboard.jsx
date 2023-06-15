@@ -1,6 +1,4 @@
-import Table from "./Table"
-
-
+import UserTable from "./UserTable"
 const DashboardComponent = () => {
   return (
     <>    
@@ -18,7 +16,7 @@ const DashboardComponent = () => {
          </div>
       </div>
       <div className="flex items-center p-2 justify-center h-76 mb-4 rounded bg-gray-100">
-         <Table />
+         <UserTable />
       </div>
      
       <div className="flex items-center justify-center h-64 mb-4 rounded bg-gray-100">

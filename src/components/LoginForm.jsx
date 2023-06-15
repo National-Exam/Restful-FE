@@ -32,7 +32,7 @@ export const LoginForm = () => {
     }
     if (isSuccess) {
       dispatch(clearState());
-      navigate('/dashboard');
+      navigate('/users');
     }
   }, [dispatch, errorMessage, isError, isSuccess, navigate]);
   return (

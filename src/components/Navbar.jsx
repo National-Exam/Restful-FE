@@ -1,12 +1,31 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getCurrentUser, userSelector } from "../store/UserSlice";
+import { Link } from "react-router-dom";
 
 const Navbar = ({handleOpenSidebar}) => {
   const [showInfo,setShowInfo] = useState(false);
   const handleOpenInfo = () => {
     setShowInfo(!showInfo);
   }  
-
+  const dispatch = useDispatch();
+    const [currentUserInfo,setCurrentUserInfo] = useState([])
+      const { isFetchingCurrentUser, currentUser } = useSelector(
+        userSelector
+    );
+    useEffect(() => {
+        if (currentUser && !isFetchingCurrentUser) {            
+            setCurrentUserInfo(currentUser);
+        }
+    },[currentUser,isFetchingCurrentUser])
+      useEffect(() => {
+        dispatch(getCurrentUser());
+    },[dispatch])    
+    const handleLogout = () => {
+      localStorage.removeItem("token");
+      window.location.href = "/";
+    }
   return (
    <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200">
   <div className="px-3 py-3 lg:px-5 lg:pl-3">
@@ -33,26 +52,23 @@ const Navbar = ({handleOpenSidebar}) => {
             </div>
             {
               showInfo && <div className="z-50 top-4 right-0 absolute my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow" id="dropdown-user">
-              <div className="px-4 py-3" role="none">
-                <p className="text-sm text-gray-900" role="none">
-                  Neil Sims
+              <div className="px-4 py-3" >
+                <p className="text-sm text-gray-900 whitespace-nowrap" >
+                  {`${currentUserInfo?.firstName} ${currentUserInfo?.lastName}`}
                 </p>
-                <p className="text-sm font-medium text-gray-900 truncate" role="none">
-                  neil.sims@flowbite.com
+                <p className="text-sm font-medium text-gray-900 truncate" >
+                  {currentUserInfo?.email}
                 </p>
               </div>
-              <ul className="py-1" role="none">
+              <ul className="py-1" >                
                 <li>
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Dashboard</a>
+                  <Link to="/users" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Users</Link>
                 </li>
                 <li>
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</a>
+                  <Link to="/vehicles" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Vehicles</Link>
                 </li>
                 <li>
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Earnings</a>
-                </li>
-                <li>
-                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</a>
+                  <button onClick={handleLogout} className="block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</button>
                 </li>
               </ul>
             </div>

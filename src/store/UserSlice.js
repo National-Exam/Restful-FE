@@ -25,6 +25,28 @@ export const getUsers = createAsyncThunk(
     }
   }
 );
+export const getCurrentUser = createAsyncThunk(
+  "users/getCurrentUser",
+  async (thunkAPI) => {
+    try {  
+        const headers = createAuthorizationHeaders();
+      let link = "http://localhost:5000/api/v1/users/account";
+      const response = await axios.get(link,{
+        headers,
+      });
+      console.log(response, 'the BE RESPONSE')
+      let data = await response.data;
+      if (response.status === 200) {        
+        return data;
+      } else {
+        return thunkAPI.rejectWithValue(data);
+      }
+    } catch (e) {
+      console.log("Error", e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
 
 export const createUser = createAsyncThunk(
   "users/signupUser",
@@ -58,6 +80,10 @@ export const UserSlice = createSlice({
   name: "users",
   initialState: {
     users: [],
+    currentUser: {},
+    isFetchingCurrentUser: false,
+    getCurrentUserSuccess: false,
+    getCurrentUserError:false,
     isFetching: false,
     isSuccess: false,
     isError: false,
@@ -76,6 +102,9 @@ export const UserSlice = createSlice({
         state.createdError = false;
         state.createdSuccess = false;
         state.isCreating = false;
+          state.isFetchingCurrentUser= false;
+    state.getCurrentUserSuccess= false;
+    state.getCurrentUserError=false;
       return state;
     },
   },
@@ -99,6 +128,26 @@ export const UserSlice = createSlice({
       })
       .addCase(getUsers.pending, (state) => {
         state.isFetching = true;
+      });
+    builder
+      .addCase(getCurrentUser.fulfilled, (state, { payload }) => {
+        state.currentUser = payload;
+        state.isFetchingCurrentUser = false;
+        state.getCurrentUserSuccess = true;
+        return state;
+      })
+      .addCase(getCurrentUser.rejected, (state, { payload }) => {
+        state.isFetchingCurrentUser = false;
+        state.getCurrentUserError = true;
+        state.getCurrentUserSuccess = false;
+        state.errorMessage =
+          payload?.error ||
+          payload?.message ||
+          payload?.data?.message ||
+          payload;
+      })
+      .addCase(getCurrentUser.pending, (state) => {
+        state.isFetchingCurrentUser = true;
       });
     builder
       .addCase(createUser.fulfilled, (state, { payload }) => {

@@ -4,7 +4,7 @@ import NotFound from './pages/NotFound';
 import SignUp from './pages/SignUp';
 import PrivateRoute from './PrivateRoute';
 import UserPage from './pages/User';
-import VehiclePage from './pages/Vehicle';
+import EmployeePage from './pages/Employee';
 
 function App() {
   return (     
@@ -16,7 +16,7 @@ function App() {
                 <Route path="/users" element={<UserPage />} />
             </Route>        
         <Route element={<PrivateRoute/>}>
-                <Route path="/vehicles" element={<VehiclePage />} />
+                <Route path="/employees" element={<EmployeePage />} />
             </Route>        
         <Route element={<NotFound />} />
         

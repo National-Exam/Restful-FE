@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar"
 import Sidebar from "../components/Sidebar"
-import VehicleComponent from "../components/VehicleComponent";
+import EmployeeComponent from "../components/EmployeeComponent";
 
-const VehiclePage = () => {
+const EmployeePage = () => {
   const [sidebarOpen,setSidebarOpen] = useState(false);
   const handleOpenSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -12,9 +12,9 @@ const VehiclePage = () => {
     <>
      <Navbar handleOpenSidebar={handleOpenSidebar} />
      <Sidebar sidebarOpen={sidebarOpen} handleOpenSidebar={handleOpenSidebar} />
-     <VehicleComponent />
+     <EmployeeComponent />
     </>
   )
 }
 
-export default VehiclePage
+export default EmployeePage

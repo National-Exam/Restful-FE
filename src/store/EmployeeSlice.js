@@ -3,40 +3,60 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { createAuthorizationHeaders } from "../utils/authHeaders";
 
-export const getVehicles = createAsyncThunk("users/getVehicles", async (thunkAPI) => {
-  try {
-    const headers = createAuthorizationHeaders();
-    let link = "http://localhost:5000/api/v1/vehicles";
-    const response = await axios.get(link, {
-      headers,
-    });
-    console.log(response, "the BE RESPONSE");
-    let data = await response.data;
-    if (response.status === 200) {
-      return data;
-    } else {
-      return thunkAPI.rejectWithValue(data);
-    }
-  } catch (e) {
-    console.log("Error", e.response.data);
-    return thunkAPI.rejectWithValue(e.response.data);
-  }
-});
-
-export const createVehicle = createAsyncThunk(
-  "users/createVehicle",
-  async ({ chasisNumber, mfgCompany, mfgYear, owner, model,plateNumber,price }, thunkAPI) => {
+export const getEmployees = createAsyncThunk(
+  "users/getEmployees",
+  async ({page,limit},thunkAPI) => {
     try {
       const headers = createAuthorizationHeaders();
-      let link = "http://localhost:5000/api/v1/vehicles";
+      let link = `http://localhost:5000/api/v1/employees?page=${page}&limit=${limit}`;
+      const response = await axios.get(link, {
+        headers,
+      });
+      console.log(response, "the BE RESPONSE");
+      let data = await response.data;
+      if (response.status === 200) {
+        return data;
+      } else {
+        return thunkAPI.rejectWithValue(data);
+      }
+    } catch (e) {
+      console.log("Error", e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
+    }
+  }
+);
+
+export const createEmployee = createAsyncThunk(
+  "users/createEmployee",
+  async (
+    {
+      firstName,
+      lastName,
+      nationalId,
+      telephone,
+      email,
+      department,
+      position,
+      laptopManufacturer,
+      laptopModel,
+      serialNumber,
+    },
+    thunkAPI
+  ) => {
+    try {
+      const headers = createAuthorizationHeaders();
+      let link = "http://localhost:5000/api/v1/employees";
       const params = {
-        mfgYear,
-        chasisNumber,
-        mfgCompany,
-        owner,
-        model,
-        plateNumber,
-        price
+        firstName,
+        lastName,
+        nationalId,
+        telephone,
+        email,
+        department,
+        position,
+        laptopManufacturer,
+        laptopModel,
+        serialNumber,
       };
       const response = await axios.post(link, params, {
         headers,
@@ -53,10 +73,10 @@ export const createVehicle = createAsyncThunk(
   }
 );
 
-export const vehicleSlice = createSlice({
-  name: "vehicles",
+export const employeeSlice = createSlice({
+  name: "employees",
   initialState: {
-    vehicles: [],
+    employees: [],
     isFetching: false,
     isSuccess: false,
     isError: false,
@@ -80,13 +100,13 @@ export const vehicleSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getVehicles.fulfilled, (state, { payload }) => {
-        state.vehicles = payload;
+      .addCase(getEmployees.fulfilled, (state, { payload }) => {
+        state.employees = payload;
         state.isFetching = false;
         state.isSuccess = true;
         return state;
       })
-      .addCase(getVehicles.rejected, (state, { payload }) => {
+      .addCase(getEmployees.rejected, (state, { payload }) => {
         state.isFetching = false;
         state.isError = true;
         state.isSuccess = false;
@@ -96,18 +116,18 @@ export const vehicleSlice = createSlice({
           payload?.data?.message ||
           payload;
       })
-      .addCase(getVehicles.pending, (state) => {
+      .addCase(getEmployees.pending, (state) => {
         state.isFetching = true;
       });
     builder
-      .addCase(createVehicle.fulfilled, (state, { payload }) => {
+      .addCase(createEmployee.fulfilled, (state, { payload }) => {
         state.isCreating = false;
         state.createdSuccess = true;
         state.createdError = false;
         state.createdMsg = payload?.message;
         return state;
       })
-      .addCase(createVehicle.rejected, (state, { payload }) => {
+      .addCase(createEmployee.rejected, (state, { payload }) => {
         state.isCreating = false;
         state.createdError = true;
         state.createdSuccess = false;
@@ -118,13 +138,13 @@ export const vehicleSlice = createSlice({
           payload;
         return state;
       })
-      .addCase(createVehicle.pending, (state) => {
+      .addCase(createEmployee.pending, (state) => {
         state.isCreating = true;
         return state;
       });
   },
 });
 
-export const { clearState } = vehicleSlice.actions;
+export const { clearState } = employeeSlice.actions;
 
-export const vehicleSelector = (state) => state.vehicles;
+export const employeeSelector = (state) => state.employees;

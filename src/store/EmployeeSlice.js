@@ -4,7 +4,7 @@ import axios from "axios";
 import { createAuthorizationHeaders } from "../utils/authHeaders";
 
 export const getEmployees = createAsyncThunk(
-  "users/getEmployees",
+  "employees/getEmployees",
   async ({page,limit},thunkAPI) => {
     try {
       const headers = createAuthorizationHeaders();
@@ -25,9 +25,45 @@ export const getEmployees = createAsyncThunk(
     }
   }
 );
-
+export const getDepartments = createAsyncThunk("employees/getDepartments", async (thunkAPI) => {
+  try {
+    const headers = createAuthorizationHeaders();
+    let link = "http://localhost:5000/api/v1/employees/departments";
+    const response = await axios.get(link, {
+      headers,
+    });        
+    let data = await response.data;
+    if (response.status === 200) {
+      return data;
+    } else {
+      return thunkAPI.rejectWithValue(data);
+    }
+  } catch (e) {
+    console.log("Error", e.response.data);
+    return thunkAPI.rejectWithValue(e.response.data);
+  }
+});
+export const getLaptops = createAsyncThunk("employees/getLaptops", async (thunkAPI) => {
+  try {
+    const headers = createAuthorizationHeaders();
+    let link = "http://localhost:5000/api/v1/employees/laptops";
+    const response = await axios.get(link, {
+      headers,
+    });
+    console.log(response, "the BE RESPONSE");
+    let data = await response.data;
+    if (response.status === 200) {
+      return data;
+    } else {
+      return thunkAPI.rejectWithValue(data);
+    }
+  } catch (e) {
+    console.log("Error", e.response.data);
+    return thunkAPI.rejectWithValue(e.response.data);
+  }
+});
 export const createEmployee = createAsyncThunk(
-  "users/createEmployee",
+  "employees/createEmployee",
   async (
     {
       firstName,
@@ -40,6 +76,8 @@ export const createEmployee = createAsyncThunk(
       laptopManufacturer,
       laptopModel,
       serialNumber,
+      departmentId,
+      laptopId
     },
     thunkAPI
   ) => {
@@ -57,6 +95,8 @@ export const createEmployee = createAsyncThunk(
         laptopManufacturer,
         laptopModel,
         serialNumber,
+        departmentId,
+        laptopId
       };
       const response = await axios.post(link, params, {
         headers,
@@ -77,6 +117,8 @@ export const employeeSlice = createSlice({
   name: "employees",
   initialState: {
     employees: [],
+    departments: [],
+    laptops: [],
     isFetching: false,
     isSuccess: false,
     isError: false,
@@ -118,6 +160,42 @@ export const employeeSlice = createSlice({
       })
       .addCase(getEmployees.pending, (state) => {
         state.isFetching = true;
+      });
+    builder
+      .addCase(getDepartments.fulfilled, (state, { payload }) => {
+        console.log(payload, 'working fine')
+        state.departments = payload;        
+        return state;
+      })
+      .addCase(getDepartments.rejected, (state, { payload }) => {
+        state.isFetching = false;
+        state.isError = true;        
+        state.errorMessage =
+          payload?.error ||
+          payload?.message ||
+          payload?.data?.message ||
+          payload;
+      })
+      .addCase(getDepartments.pending, (state) => {
+        state.isFetching = true;
+      });
+    builder
+      .addCase(getLaptops.fulfilled, (state, { payload }) => {
+        state.laptops = payload;        
+        return state;
+      })
+      .addCase(getLaptops.rejected, (state, { payload }) => {
+        state.isFetching = false;
+        state.isError = true;        
+        state.errorMessage =
+          payload?.error ||
+          payload?.message ||
+          payload?.data?.message ||
+          payload;
+      })
+      .addCase(getLaptops.pending, (state) => {
+        state.isFetching = true;
+        return state
       });
     builder
       .addCase(createEmployee.fulfilled, (state, { payload }) => {

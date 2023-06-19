@@ -52,19 +52,17 @@ const Navbar = ({handleOpenSidebar}) => {
             {
               showInfo && <div className="z-50 top-4 right-0 absolute my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow" id="dropdown-user">
               <div className="px-4 py-3" >
-                <p className="text-sm text-gray-900 whitespace-nowrap" >
+                {/* <p className="text-sm text-gray-900 whitespace-nowrap" >
                   {`${currentUserInfo?.firstName} ${currentUserInfo?.lastName}`}
-                </p>
+                </p> */}
                 <p className="text-sm font-medium text-gray-900 truncate" >
                   {currentUserInfo?.email}
                 </p>
               </div>
               <ul className="py-1" >                
+                
                 <li>
-                  <Link to="/users" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Users</Link>
-                </li>
-                <li>
-                  <Link to="/employees" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Equipments</Link>
+                  <Link to="/employees" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Employees</Link>
                 </li>
                 <li>
                   <button onClick={handleLogout} className="block px-4 py-2 w-full text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</button>

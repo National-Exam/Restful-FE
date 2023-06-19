@@ -5,18 +5,16 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { clearState, createEmployee, getEmployees, employeeSelector } from "../store/EmployeeSlice";
+import { clearState, createEmployee, getEmployees, employeeSelector, getDepartments, getLaptops } from "../store/EmployeeSlice";
 const schema = yup.object().shape({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
   nationalId: yup.string().required(),
   telephone: yup.string().required(),
-  email: yup.string().email().required(),
-  department: yup.string().required(),
-  position: yup.string().required(),
-  laptopManufacturer: yup.string().required(),
-  laptopModel: yup.string().required(),
-  serialNumber: yup.string().required(),
+  email: yup.string().email().required(),  
+  position: yup.string().required(), 
+  departmentId: yup.number(),
+  laptopId: yup.number()
 });
 const AddEmployee = () => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
@@ -24,12 +22,16 @@ const AddEmployee = () => {
   });
       const dispatch = useDispatch();
     const navigate = useNavigate();    
-    const { isCreating, createdSuccess, createdError, createdErrorMessage } = useSelector(
+    const { isCreating, createdSuccess, createdError, createdErrorMessage,departments,laptops } = useSelector(
         employeeSelector
     ); 
-  
+    useEffect(()=>{
+            dispatch(getDepartments());
+     dispatch(getLaptops());
+    },[dispatch])  
   const onSubmit = (data) =>{         
      dispatch(createEmployee(data));
+ 
     reset();
 }
  useEffect(() => {  
@@ -68,33 +70,40 @@ const AddEmployee = () => {
                         <input  {...register("email")} type="text" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="example@gmail.com"/>
                         <p className="text-red-700">{errors.email?.message}</p>
                     </div>  
-                     <div>
-                        <label htmlFor="serialNumber" className="block mb-2 text-sm font-medium text-gray-900">Laptop Serial number</label>
-                        <input {...register("serialNumber")} type="text" name="serialNumber" id="serialNumber" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="RAC234"/>
-                        <p className="text-red-700">{errors.serialNumber?.message}</p>
-                        
-                    </div> 
-                     <div>
-                        <label htmlFor="laptopManufacturer" className="block mb-2 text-sm font-medium text-gray-900">Laptop Manufacturer</label>
-                        <input {...register("laptopManufacturer")} type="text" name="laptopManufacturer" id="laptopManufacturer" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Dell"/>
-                        <p className="text-red-700">{errors.laptopManufacturer?.message}</p>
-                        
-                    </div> 
-                     <div>
-                        <label htmlFor="department" className="block mb-2 text-sm font-medium text-gray-900">Employee department</label>
-                        <input {...register("department")} type="text" name="department" id="department" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Human resource"/>
-                        <p className="text-red-700">{errors.department?.message}</p>                        
-                    </div> 
+                   
+                   
+                    <div className="my-2">
+                        <label htmlFor="departments" className="block mb-2 text-sm font-medium text-gray-900 ">Select a department</label>
+<select  {...register("departmentId")} name="departmentId" id="departmentId" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+  <option >Choose a department</option>
+  {
+     departments.map(dep=>{
+        return (
+            <option  key={dep.name} value={dep.id}>{dep?.name}</option>
+        )
+     })
+  }
+</select>
+
+                    </div>
+                    <div>
+                         <label htmlFor="departments" className="block mb-2 text-sm font-medium text-gray-900 ">Select a laptop</label>
+                        <select {...register("laptopId")} name="laptopId" id="laptopId" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+  <option >Choose a laptop</option>
+  {
+     laptops.map(laptop=>{
+        return (
+            <option  key={laptop.serialNumber} value={laptop.id}>{`${laptop?.laptopModel} ${laptop.laptopManufacturer} ${laptop.serialNumber}` }</option>
+        )
+     })
+  }
+</select>
+                    </div>
                      <div>
                         <label htmlFor="position" className="block mb-2 text-sm font-medium text-gray-900">Employee position</label>
                         <input {...register("position")} type="text" name="position" id="position" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Manager"/>
                         <p className="text-red-700">{errors.position?.message}</p>                        
-                    </div> 
-                     <div>
-                        <label htmlFor="laptopModel" className="block mb-2 text-sm font-medium text-gray-900">Laptop Model</label>
-                        <input {...register("laptopModel")} type="text" name="laptopModel" id="laptopModel" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="New Model"/>
-                        <p className="text-red-700">{errors.laptopModel?.message}</p>
-                    </div> 
+                    </div>                    
                      <div>
                         <label htmlFor="nationalId" className="block mb-2 text-sm font-medium text-gray-900">National id</label>
                         <input {...register("nationalId")} type="text" name="nationalId" id="nationalId" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="12003245678909"/>

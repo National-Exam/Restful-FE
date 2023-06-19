@@ -17,11 +17,10 @@ const EmployeeTable = () => {
         employeeSelector
     );
     useEffect(() => {
-        if (employees && employees?.employeesData.length > 0 && !isFetching) {            
+        if (employees && employees?.employeesData?.length > 0 && !isFetching) {            
             setEmployees(employees.employeesData);
         }
-    },[employees,isFetching])    
-    console.log(employees, 'the employees')
+    },[employees,isFetching])        
     useEffect(() => {
         if(createdSuccess)
          handleShowAdd()
@@ -82,11 +81,11 @@ const EmployeeTable = () => {
             <td className="px-6 py-4">{employee.nationalId ?? '--'}</td>
             <td className="px-6 py-4">{employee.telephone}</td>
             <td className="px-6 py-4">{employee.email}</td>
-            <td className="px-6 py-4">{employee.department}</td>           
+            <td className="px-6 py-4">{employee?.department?.name}</td>           
             <td className="px-6 py-4">{employee.position}</td>           
-            <td className="px-6 py-4">{employee.laptopManufacturer}</td>           
-            <td className="px-6 py-4">{employee.laptopModel}</td>           
-            <td className="px-6 py-4">{employee.serialNumber}</td>           
+            <td className="px-6 py-4">{employee?.laptop?.laptopManufacturer}</td>           
+            <td className="px-6 py-4">{employee?.laptop?.laptopModel}</td>           
+            <td className="px-6 py-4">{employee?.laptop?.serialNumber}</td>           
           </tr> 
                     )
                 })

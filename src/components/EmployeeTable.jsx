@@ -33,10 +33,10 @@ const EmployeeTable = () => {
     
     useEffect(() => {
         dispatch(getEmployees({page,limit:10}));
-        setTotalPages(employees.totalPages);
-        let newArray = Array.from({ length: totalPages }, (value, index) => index);
+        setTotalPages(employees.totalPage);
+        let newArray = Array.from({ length: totalPages-1 }, (value, index) => index);
         setPages(newArray)
-    },[dispatch, employees.totalPages, page, totalPages])
+    },[dispatch, employees.totalPage, page, totalPages])
     
   return (
     <div className="relative w-full p-3 overflow-x-auto sm:rounded-lg">

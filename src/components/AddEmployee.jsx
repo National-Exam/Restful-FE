@@ -9,8 +9,8 @@ import { clearState, createEmployee, getEmployees, employeeSelector, getDepartme
 const schema = yup.object().shape({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
-  nationalId: yup.string().required(),
-  telephone: yup.string().required(),
+  nationalId: yup.string().required().min(16).max(16),
+  telephone: yup.string().required().max(10).min(10).matches(/^\d+$/, 'Telephone must be  numbers'),
   email: yup.string().email().required(),  
   position: yup.string().required(), 
   departmentId: yup.number(),
